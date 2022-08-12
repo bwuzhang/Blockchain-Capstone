@@ -28,6 +28,10 @@ contract Ownable {
     }
     //  5) create an event that emits anytime ownerShip is transfered (including in the constructor)
     event ownershipTransfered(address newOwner);
+
+    function owner() public view returns (address) {
+        return _owner;
+    }
 }
 
 //  TODO's: Create a Pausable contract that inherits from the Ownable contract
@@ -229,7 +233,7 @@ contract ERC721 is Pausable, ERC165 {
         _tokenOwner[tokenId] = to;
         _ownedTokensCount[to].increment();
         // TODO emit Transfer event
-        emit Transfer(_owner, to, tokenId);
+        emit Transfer(address(0), to, tokenId);
     }
 
     // @dev Internal function to transfer ownership of a given token ID to another address.
@@ -468,7 +472,7 @@ contract ERC721Metadata is ERC721Enumerable, usingOraclize {
      */
 
 
-    constructor (string memory name, string memory symbol, string memory baseTokenURI) public {
+    constructor (string memory name, string memory symbol, string memory baseTokenURI) ERC721Enumerable() public {
         // TODO: set instance var values
         _name = name;
         _symbol = symbol;
@@ -495,7 +499,6 @@ contract ERC721Metadata is ERC721Enumerable, usingOraclize {
         require(_exists(tokenId));
         _tokenURIs[tokenId] = strConcat(_baseTokenURI, uint2str(tokenId));
     }
-
 }
 
 //  TODO's: Create CustomERC721Token contract that inherits from the ERC721Metadata contract. You can name this contract as you please
@@ -506,17 +509,15 @@ contract ERC721Metadata is ERC721Enumerable, usingOraclize {
 //      -takes in a 'to' address and tokenId as parameters
 //      -returns a true boolean upon completion of the function
 //      -calls the superclass mint and setTokenURI functions
-    contract CustomERC721Token is ERC721Metadata {
+contract ERC721MintableComplete is ERC721Metadata {
+    string private name = "Blockchain Technology Supreme";
+    string private symbol = "BTS";
+    string private baseTokenURI = "https://s3-us-west-2.amazonaws.com/udacity-blockchain/capstone/";
+    constructor() ERC721Metadata(name, symbol, baseTokenURI) public {}
 
-        constructor() public {
-            _baseTokenURI = "https://s3-us-west-2.amazonaws.com/udacity-blockchain/capstone/";
-        }
-
-        function mint(address to, uint256 tokenId) public onlyOwner returns (bool) {
-            _mint(to, tokenId);
-            setTokenURI(tokenId);
-            return true;
-        }
+    function mint(address to, uint256 tokenId) public onlyOwner returns (bool) {
+        super._mint(to, tokenId);
+        setTokenURI(tokenId);
+        return true;
     }
-
-
+}
