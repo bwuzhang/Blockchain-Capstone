@@ -3,5 +3,62 @@
 // Test verification with correct proof
 // - use the contents from proof.json generated from zokrates steps
 
-    
 // Test verification with incorrect proof
+
+const { assert } = require("chai");
+
+var SquareVerifier = artifacts.require("verifier");
+const proofFromFile = require("../../zokrates/code/square/proof.json");
+
+contract("TestSquareVerifier", (accounts) => {
+  const account_one = accounts[0];
+  const account_two = accounts[1];
+  let contractInstance;
+  describe("test square verifier specs", function () {
+    beforeEach(async function () {
+      contractInstance = await SquareVerifier.new({
+        from: account_one,
+      });
+      proofAsUint = getProofAsUint();
+    });
+
+    it("should pass for a correct proof", async function () {
+      let tx = await contractInstance.verifyTx(
+        proofAsUint.proof,
+        proofAsUint.inputs
+      );
+      assert.equal(tx, true, "Verification passed!");
+    });
+
+    it("should fail for an incorrect proof", async function () {
+      let tx = await contractInstance.verifyTx(proofAsUint.proof, [0]);
+      assert.equal(tx, false, "Verification failed!");
+    });
+  });
+});
+
+const getProofAsUint = () => {
+  return {
+    proof: {
+      a: [
+        web3.utils.toBN(proofFromFile.proof.a[0]).toString(),
+        web3.utils.toBN(proofFromFile.proof.a[1]).toString(),
+      ],
+      b: [
+        [
+          web3.utils.toBN(proofFromFile.proof.b[0][0]).toString(),
+          web3.utils.toBN(proofFromFile.proof.b[0][1]).toString(),
+        ],
+        [
+          web3.utils.toBN(proofFromFile.proof.b[1][0]).toString(),
+          web3.utils.toBN(proofFromFile.proof.b[1][1]).toString(),
+        ],
+      ],
+      c: [
+        web3.utils.toBN(proofFromFile.proof.c[0]).toString(),
+        web3.utils.toBN(proofFromFile.proof.c[1]).toString(),
+      ],
+    },
+    inputs: proofFromFile.inputs,
+  };
+};
