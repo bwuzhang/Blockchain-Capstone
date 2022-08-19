@@ -29,7 +29,7 @@ async function main() {
       from: account_one,
       to: deployedNetwork.address,
       value: 0,
-      gas: 1000000,
+      gas: 1500000,
       maxFeePerGas: 10000108,
       nonce: nonce,
       data: instance.methods
@@ -40,11 +40,11 @@ async function main() {
       from: account_one,
       to: deployedNetwork.address,
       value: 0,
-      gas: 1000000,
+      gas: 1500000,
       maxFeePerGas: 10000108,
       nonce: nonce + 1,
       data: instance.methods
-        .verifiedMint(10, proofAsUint.proof, proofAsUint.inputs)
+        .verifiedMint(12, proofAsUint.proof, proofAsUint.inputs)
         .encodeABI(),
     },
   ];
@@ -72,6 +72,7 @@ async function main() {
       }
     );
     i++;
+    await new Promise((resolve) => setTimeout(resolve, 20000)); // Wait 20 seconds for the next block
   }
 }
 

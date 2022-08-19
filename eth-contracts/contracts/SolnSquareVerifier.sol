@@ -63,7 +63,8 @@ contract SolnSquareVerifier is ERC721MintableComplete {
 
     function verifiedMint(uint256 index, Verifier.Proof memory proof, uint[1] memory input) public {
         bytes32 solutionHash = keccak256(abi.encodePacked(proof.a.X, proof.a.Y, proof.b.X[0], proof.b.X[1], proof.b.Y[0], proof.b.Y[1], proof.c.X, proof.c.Y, input[0]));
-        require(solutions_mapping[solutionHash].provider == msg.sender, "Solution provided and NFT minter is not the same address!");
+        require(solutions_mapping[solutionHash].provider != address(0), "Solution needs to exist!");
+        require(solutions_mapping[solutionHash].provider == msg.sender, "Solution provided and NFT minter are not the same address!");
         require(solutions_mapping[solutionHash].minted == false, "Solution is used!");
 
         super.mint(msg.sender, index);
@@ -72,7 +73,7 @@ contract SolnSquareVerifier is ERC721MintableComplete {
 
     function getSolutionProvider(Verifier.Proof memory proof, uint[1] memory input) view public returns(address){
         bytes32 solutionHash = keccak256(abi.encodePacked(proof.a.X, proof.a.Y, proof.b.X[0], proof.b.X[1], proof.b.Y[0], proof.b.Y[1], proof.c.X, proof.c.Y, input[0]));
-        require(solutions_mapping[solutionHash].provider != address(0), "Solution need to exist!");
+        require(solutions_mapping[solutionHash].provider != address(0), "Solution needs to exist!");
         return(solutions_mapping[solutionHash].provider);
     }
 

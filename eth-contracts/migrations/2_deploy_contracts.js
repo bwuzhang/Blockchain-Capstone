@@ -5,6 +5,7 @@ var SquareVerifier = artifacts.require("verifier");
 
 module.exports = function (deployer) {
   // deployer.deploy(ERC721Mintable);
-  deployer.deploy(SquareVerifier);
-  deployer.deploy(SolnSquareVerifier, SquareVerifier.address);
+  deployer.deploy(SquareVerifier).then(function () {
+    return deployer.deploy(SolnSquareVerifier, SquareVerifier.address);
+  });
 };
