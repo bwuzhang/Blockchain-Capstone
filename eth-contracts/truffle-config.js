@@ -12,17 +12,26 @@
  * to sign your transactions before they're sent to a remote public node. Infura API
  * keys are available for free at: infura.io/register
  *
+ *   > > Using Truffle V5 or later? Make sure you install the `web3-one` version.
+ *
+ *   > > $ npm install truffle-hdwallet-provider@web3-one
+ *
  * You'll also need a mnemonic - the twelve word phrase the wallet uses to generate
  * public/private key pairs. If you're publishing your code to GitHub make sure you load this
  * phrase from a file you've .gitignored so it doesn't accidentally become public.
  *
  */
 
-// const HDWalletProvider = require('truffle-hdwallet-provider');
+const HDWallet = require("truffle-hdwallet-provider");
 // const infuraKey = "fj4jll3k.....";
 //
-// const fs = require('fs');
+const fs = require("fs");
 // const mnemonic = fs.readFileSync(".secret").toString().trim();
+let secrets;
+
+if (fs.existsSync("secrets.json")) {
+  secrets = JSON.parse(fs.readFileSync("secrets.json", "utf8"));
+}
 
 module.exports = {
   /**
@@ -47,7 +56,13 @@ module.exports = {
       port: 8545, // Standard Ethereum port (default: none)
       network_id: "*", // Any network (default: none)
     },
-
+    rinkeby: {
+      provider: new HDWallet(
+        secrets.mnemonic,
+        "https://rinkeby.infura.io/v3/" + secrets.infuraApiKey
+      ),
+      network_id: "4",
+    },
     // Another network with more advanced options...
     // advanced: {
     // port: 8777,             // Custom port
@@ -85,7 +100,7 @@ module.exports = {
   // Configure your compilers
   compilers: {
     solc: {
-      // version: "0.5.0", // Fetch exact version from solc-bin (default: truffle's version)
+      // version: "0.5.1",    // Fetch exact version from solc-bin (default: truffle's version)
       // docker: true,        // Use "0.5.1" you've installed locally with docker (default: false)
       // settings: {          // See the solidity docs for advice about optimization and evmVersion
       //  optimizer: {

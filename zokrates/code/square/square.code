@@ -1,6 +1,5 @@
-def main(private field a, private field c, private field d, field b) {
-    assert(a * a + 3 * a + 28 == b);
-    assert(d * c == b);
+def main(private field a, field b) {
+    assert(a * a == b);
     return;
 }
 

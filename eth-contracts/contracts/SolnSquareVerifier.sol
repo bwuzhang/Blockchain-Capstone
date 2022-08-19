@@ -69,6 +69,13 @@ contract SolnSquareVerifier is ERC721MintableComplete {
         super.mint(msg.sender, index);
         solutions_mapping[solutionHash].minted == true;
     }
+
+    function getSolutionProvider(Verifier.Proof memory proof, uint[1] memory input) view public returns(address){
+        bytes32 solutionHash = keccak256(abi.encodePacked(proof.a.X, proof.a.Y, proof.b.X[0], proof.b.X[1], proof.b.Y[0], proof.b.Y[1], proof.c.X, proof.c.Y, input[0]));
+        require(solutions_mapping[solutionHash].provider != address(0), "Solution need to exist!");
+        return(solutions_mapping[solutionHash].provider);
+    }
+
 }
 
 
