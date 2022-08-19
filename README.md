@@ -16,7 +16,7 @@ Purchase account: 0x95aA6Bdf8dD5833aB086775bFd43cD4eE3A5c3B2
 
 ## Contract ABI
 
-Contract ABIs are under `eth-contracts/build` folder.
+Contract ABIs are under `eth-contracts/build/contracts` folder.
 
 # Project Resources
 
